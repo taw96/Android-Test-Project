@@ -15,9 +15,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.stream.Collectors;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -113,11 +111,11 @@ public class MainActivity extends AppCompatActivity {
 
         Log.e("1", toConvert + " length: " + toConvert.length());
 
-        String afterEncryption = encodeHashing(toConvert, key);
-        String afterDec = decodeHashing(afterEncryption);
+        String afterEncryption = encryption(toConvert, key);
+        String afterDecryption = decryption(afterEncryption);
 
-        Log.e("3",  afterEncryption + " length: " + afterEncryption.length());
-        Log.e("5", afterDec  + " length: " + afterDec.length());
+        Log.e("3", afterEncryption + " length: " + afterEncryption.length());
+        Log.e("5", afterDecryption + " length: " + afterDecryption.length());
 
 //        String encryptedValue = EncryptionUtils.encrypt(this, key);
 //        Log.e(" Encrypted Value ", encryptedValue);
@@ -126,90 +124,89 @@ public class MainActivity extends AppCompatActivity {
 //        Log.e(" Decrypted Value ", decryptedValue);
     }
 
-        public ArrayList<Integer> generateFibo(int countMax){
-            int n1=0,n2=1,n3,count = countMax;
-            ArrayList<Integer> array = new ArrayList<>();
-            System.out.print(n1+" "+n2);//printing 0 and 1
-            array.add(n1);
-            array.add(n2);
-            for(int i=2; i < count; ++i) {
-                n3=n1+n2;
-                array.add(n3);
-                n1=n2;
-                n2=n3;
-            }
-
-            return array;
+    public ArrayList<Integer> generateFiboArray(int arrayLength) {
+        int n1 = 0, n2 = 1, n3, count = arrayLength;
+        ArrayList<Integer> array = new ArrayList<>();
+        System.out.print(n1 + " " + n2);//printing 0 and 1
+        array.add(n1);
+        array.add(n2);
+        for (int i = 2; i < count; ++i) {
+            n3 = n1 + n2;
+            array.add(n3);
+            n1 = n2;
+            n2 = n3;
         }
-
-        public String encodeHashing(String toConvert, String key) {
-            //first step - encode with xor
-            String firstConversion = encode(toConvert, key);
-
-            Log.e("2",  firstConversion + " length: " + firstConversion.length());
-
-            ArrayList<Integer> fibonacciArray = generateFibo(firstConversion.length());
-            ArrayList<Character> charsArray = new ArrayList<>();
-
-            // second and third steps of encryption
-            for (int i = 0; i < firstConversion.length(); i++) {
-                Character currentChar = firstConversion.charAt(i);
-                Integer charAsInt = (int) currentChar;
-                int rotatedChar = Integer.rotateLeft(charAsInt, 1);
-                char finalChar = (char) (rotatedChar + fibonacciArray.get(i));
-
-                charsArray.add(finalChar);
-            }
-
-
-
-            return charsArray.toString().replaceAll(", |\\[|\\]", "");
-
-        }
-
-         public String decodeHashing(String toDecrypt) {
-
-             ArrayList<Character> afterDecoding = new ArrayList<>();
-             ArrayList<Integer> fibonacciArray = generateFibo(toDecrypt.length());
-                //first 2 steps of decoding(fibonacci and rotating)
-             for (int i = 0; i < toDecrypt.length(); i++) {
-                 Character currentChar = toDecrypt.charAt(i);
-
-                 Integer charAsInt = (int) currentChar;
-                 char chari = (char) (charAsInt - fibonacciArray.get(i));
-
-                 int rotatedChar = Integer.rotateRight(chari, 1);
-//                 Log.e("check", "current char: " + currentChar + "\ncharAsInt: " + charAsInt + "\nchari: " + chari + "\nrotatedChar: " + rotatedChar  + "\nfinal: " + (char) rotatedChar);
-                 afterDecoding.add((char) rotatedChar);
-             }
-
-             String after2steps = afterDecoding.toString().replaceAll(", |\\[|\\]", "");
-                //last step - decode with xor
-        return decode(after2steps, key );
+        return array;
     }
 
-        public String decode(String s, String key) {
-            return new String(xorWithKey(base64Decode(s), key.getBytes()));
+    public String encryption(String toConvert, String key) {
+        //first step - encode with xor
+        String firstConversion = encode(toConvert, key);
+
+        Log.e("2", firstConversion + " length: " + firstConversion.length());
+
+        ArrayList<Integer> fibonacciArray = generateFiboArray(firstConversion.length());
+        ArrayList<Character> charsArray = new ArrayList<>();
+
+        // second and third steps of encryption
+        for (int i = 0; i < firstConversion.length(); i++) {
+            Character currentChar = firstConversion.charAt(i);
+            Integer charAsInt = (int) currentChar;
+            int rotatedChar = Integer.rotateLeft(charAsInt, 1);
+            char finalChar = (char) (rotatedChar + fibonacciArray.get(i));
+
+            charsArray.add(finalChar);
         }
 
-        public String encode(String s, String key) {
-            return base64Encode(xorWithKey(s.getBytes(), key.getBytes()));
+
+        return charsArray.toString().replaceAll(", |\\[|\\]", "");
+
+    }
+
+    public String decryption(String toDecrypt) {
+
+        ArrayList<Character> afterDecoding = new ArrayList<>();
+        ArrayList<Integer> fibonacciArray = generateFiboArray(toDecrypt.length());
+        //first 2 steps of decoding(fibonacci and rotating)
+        for (int i = 0; i < toDecrypt.length(); i++) {
+            Character currentChar = toDecrypt.charAt(i);
+
+            Integer charAsInt = (int) currentChar;
+
+            char afterFiboSubtraction = (char) (charAsInt - fibonacciArray.get(i));
+
+            int rotatedChar = Integer.rotateRight(afterFiboSubtraction, 1);
+//          Log.e("check", "current char: " + currentChar + "\ncharAsInt: " + charAsInt + "\nafter Fibonacci Subtraction: " + afterFiboSubtraction + "\nrotatedChar: " + rotatedChar  + "\nfinal: " + (char) rotatedChar);
+            afterDecoding.add((char) rotatedChar);
         }
 
-        private byte[] xorWithKey(byte[] a, byte[] key) {
-            byte[] out = new byte[a.length];
-            for (int i = 0; i < a.length; i++) {
-                out[i] = (byte) (a[i] ^ key[i%key.length]);
-            }
-            return out;
-        }
+        String after2steps = afterDecoding.toString().replaceAll(", |\\[|\\]", "");
+        //last step - decode with xor
+        return decode(after2steps, key);
+    }
 
-        private byte[] base64Decode(String s) {
-            return Base64.decode(s,Base64.DEFAULT);
-        }
+    public String decode(String s, String key) {
+        return new String(xorWithKey(base64Decode(s), key.getBytes()));
+    }
 
-        private String base64Encode(byte[] bytes) {
-            return new String(Base64.encode(bytes,Base64.DEFAULT));
+    public String encode(String s, String key) {
+        return base64Encode(xorWithKey(s.getBytes(), key.getBytes()));
+    }
+
+    private byte[] xorWithKey(byte[] a, byte[] key) {
+        byte[] out = new byte[a.length];
+        for (int i = 0; i < a.length; i++) {
+            out[i] = (byte) (a[i] ^ key[i % key.length]);
         }
+        return out;
+    }
+
+    private byte[] base64Decode(String s) {
+        return Base64.decode(s, Base64.DEFAULT);
+    }
+
+    private String base64Encode(byte[] bytes) {
+        return new String(Base64.encode(bytes, Base64.DEFAULT));
+    }
 
 }
