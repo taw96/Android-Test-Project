@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ru.noties.scrollable.ScrollableLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollable_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
+    app:scrollable_autoMaxScroll="true"
+    app:scrollable_defaultCloseUp="false"
+    >
+
+    <!--    <RelativeLayout-->
+    <!--        android:id="@+id/rl_home_header"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/whiteColor"-->
+    <!--        android:elevation="10dp">-->
+
+    <!--        <RelativeLayout-->
+    <!--            android:id="@+id/rl_home_header_animation"-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content">-->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/iv_home_logo"
+        android:background="@color/cardview_shadow_start_color"
+        android:padding="10dp">
+
+        <RelativeLayout
+            android:id="@+id/rl_home_code"
+            android:layout_width="240dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:visibility="visible">
+
+            <EditText
+                android:id="@+id/et_home_code"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:singleLine="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_toLeftOf="@+id/bt_home_send"
+                android:layout_toStartOf="@+id/bt_home_send"
+                android:gravity="center_vertical"
+                />
+
+            <Button
+                android:id="@+id/bt_home_scan"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:onClick="onScanQrCode" />
+
+            <Button
+                android:id="@+id/bt_home_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:minHeight="0dp"
+                android:minWidth="0dp"
+                android:onClick="onSendCode"
+                android:textSize="16sp"
+                android:visibility="invisible" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+    <!--        </RelativeLayout>-->
+    <!--    </RelativeLayout>-->
+
+    <!--        <LinearLayout-->
+    <!--            android:layout_width="match_parent"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            android:background="@color/whiteColor"-->
+    <!--            android:gravity="center">-->
+
+    <!--            <org.lucasr.twowayview.TwoWayView-->
+    <!--                android:id="@+id/twv_tab_home"-->
+    <!--                style="@style/TwoWayView"-->
+    <!--                android:layout_width="wrap_content"-->
+    <!--                android:layout_height="@dimen/two_way_view_height"-->
+    <!--                android:drawSelectorOnTop="false"-->
+    <!--                android:listSelector="@android:color/transparent"-->
+    <!--                android:paddingTop="0dp" />-->
+    <!--        </LinearLayout>-->
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/colorPrimary"
+        />
+
+    <RelativeLayout
+        android:id="@+id/fl_home_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_bright"
+        />
+</ru.noties.scrollable.ScrollableLayout>
